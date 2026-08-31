@@ -1,0 +1,69 @@
+{
+  "generated": "2026-08-31T09:21:05.284Z",
+  "site": "Willoughby",
+  "count": 4,
+  "targets": [
+    {
+      "id": "sh227",
+      "name": "SH 2-27",
+      "cn": "Bird of Zeta",
+      "ra": 248.9875,
+      "dec": -12.7181,
+      "type": "HII Region",
+      "band": "NB",
+      "status": "active",
+      "rigPrimary": {
+        "scope": "a91f",
+        "cam": "a2600",
+        "pa": 0
+      }
+    },
+    {
+      "id": "ngc1360",
+      "name": "NGC 1360",
+      "cn": "Robin's Egg Nebula",
+      "ra": 53.3125,
+      "dec": -25.8717,
+      "type": "Planetary Nebula",
+      "band": "NB",
+      "status": "active",
+      "rigPrimary": {
+        "scope": "p200",
+        "cam": "a585"
+      }
+    },
+    {
+      "id": "sh268",
+      "name": "SH 2-68",
+      "cn": "Flaming Skull Nebula",
+      "ra": 276.2417,
+      "dec": 0.86,
+      "type": "Planetary Nebula",
+      "band": "NB",
+      "status": "active",
+      "rigPrimary": {
+        "scope": "p200",
+        "cam": "a585"
+      }
+    },
+    {
+      "id": "m8",
+      "name": "M 8",
+      "cn": "Lagoon",
+      "ra": 270.92,
+      "dec": -24.38,
+      "type": "Emission Nebula",
+      "band": "NB",
+      "status": "active",
+      "rigPrimary": {
+        "scope": "a91f",
+        "cam": "a2600",
+        "pa": 0
+      },
+      "rigBackup": {
+        "scope": "rc61",
+        "cam": "a1600"
+      }
+    }
+  ]
+}

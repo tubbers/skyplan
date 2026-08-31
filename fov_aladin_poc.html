@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
+<title>FOV framing test — Aladin</title>
+<style>
+  :root{--ink:#ff9a76;--ink-dim:#a8543c;--hot:#ffcf6b;--edge:#43170f;--panel:#0d0301;
+    --panel2:#120402;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;color:var(--ink);overflow:hidden;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #app{display:flex;height:100%}
+  aside{flex:0 0 300px;background:var(--panel2);border-right:1px solid var(--edge);
+    padding:14px;display:flex;flex-direction:column;gap:13px;overflow-y:auto}
+  h1{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:600;margin:0}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  label{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim)}
+  select,input[type=number]{background:var(--panel);color:var(--ink);border:1px solid var(--edge);
+    border-radius:2px;padding:7px 8px;font-family:var(--mono);font-size:13px;width:100%}
+  input[type=range]{width:100%;-webkit-appearance:none;background:transparent;height:22px}
+  input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--edge)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
+    margin-top:-7px;border-radius:50%;background:var(--hot);border:2px solid #000}
+  .row2{display:flex;gap:8px}
+  .readout{font-family:var(--mono);font-size:12px;line-height:1.7;background:var(--panel);
+    border:1px solid var(--edge);border-radius:2px;padding:9px 10px;color:var(--ink)}
+  .readout b{color:var(--hot)}.readout i{color:var(--ink-dim);font-style:normal}
+  .note{font-family:var(--mono);font-size:10px;color:var(--ink-dim);line-height:1.55}
+  .manual{display:none;flex-direction:column;gap:8px}
+  .manual.show{display:flex}
+  main{flex:1 1 auto;position:relative;min-width:0}
+  #al{position:absolute;inset:0}
+  #toast{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:6;
+    background:rgba(18,4,2,.92);border:1px solid var(--edge);border-radius:3px;padding:7px 12px;
+    font-family:var(--mono);font-size:11px;color:var(--hot);display:none;max-width:80%}
+</style>
+<script src="https://aladin.cds.unistra.fr/AladinLite/api/v3/latest/aladin.js" charset="utf-8"></script>
+</head>
+<body>
+<div id="app">
+  <aside>
+    <h1>FOV framing · test</h1>
+    <div class="fld"><label>Target</label><select id="tgt"></select></div>
+
+    <div class="fld"><label>Scope</label>
+      <select id="scope">
+        <option value="rc61">RedCat 61 · 300 mm</option>
+        <option value="a91f">Askar 91F · 609 mm</option>
+        <option value="p200" selected>200PDS · 950 mm (0.95× MPCC)</option>
+        <option value="man">manual focal…</option>
+      </select>
+      <div class="manual" id="scopeMan">
+        <div class="fld"><label>Focal length (mm)</label><input type="number" id="mFoc" value="500" step="1"></div>
+      </div>
+    </div>
+
+    <div class="fld"><label>Camera</label>
+      <select id="cam">
+        <option value="a585">ASI585 · 11.14 × 6.26 mm</option>
+        <option value="a2600" selected>ASI2600 · 23.5 × 15.7 mm</option>
+        <option value="a1600">ASI1600MM · 17.7 × 13.4 mm</option>
+        <option value="man">manual sensor…</option>
+      </select>
+      <div class="manual" id="camMan">
+        <div class="row2">
+          <div class="fld"><label>Sensor W mm</label><input type="number" id="mW" value="23.5" step="0.1"></div>
+          <div class="fld"><label>Sensor H mm</label><input type="number" id="mH" value="15.7" step="0.1"></div>
+        </div>
+        <div class="fld"><label>Pixel µm (optional)</label><input type="number" id="mPx" value="3.76" step="0.01"></div>
+      </div>
+    </div>
+
+    <div class="fld"><label>Rotation / PA <span id="paTxt">0°</span></label>
+      <input type="range" id="pa" min="0" max="180" value="0"></div>
+
+    <div class="fld"><label>Survey</label>
+      <select id="srv">
+        <option value="P/DSS2/color">DSS2 colour</option>
+        <option value="P/DSS2/red">DSS2 red</option>
+        <option value="P/2MASS/color">2MASS colour</option>
+        <option value="P/allWISE/color">allWISE colour</option>
+        <option value="CDS/P/DECaPS/DR2/color">DECaPS DR2 (southern)</option>
+      </select></div>
+
+    <div class="readout" id="ro">—</div>
+    <div class="note">Pan/scroll to move &amp; zoom the sky; the <b style="color:#ffcf6b">box</b> stays locked on the
+      target at your chosen PA. Swap scope × camera to compare framing. Runs on real DSS pixels (needs the CDS tile
+      server — works from GitHub Pages / local, not the artifact sandbox).</div>
+  </aside>
+  <main>
+    <div id="al"></div>
+    <div id="toast"></div>
+  </main>
+</div>
+
+<script>
+const D=Math.PI/180, R2D=180/Math.PI, $=id=>document.getElementById(id);
+
+const TGT=[
+ ["NGC 300 · Sculptor Pinwheel",13.72,-37.68],["NGC 253 · Silver Coin",11.89,-25.29],
+ ["NGC 55 · Whale",3.72,-39.20],["NGC 247 · Needle's Eye",11.79,-20.76],
+ ["NGC 474 · Shell Galaxy",20.03,3.42],["NGC 1097",41.58,-30.27],
+ ["NGC 1300",49.92,-19.41],["NGC 1532 · Haley's Coronet",63.02,-32.87],
+ ["NGC 1566 · Spanish Dancer",65.00,-54.94],["M45 · Pleiades",56.85,24.12],
+ ["IC 2118 · Witch Head",76.73,-7.23],["Grus Quartet",349.60,-42.37],
+ ["NGC 288",13.19,-26.58],["NGC 1365 · Great Barred",53.40,-36.14]
+];
+const SCOPES={rc61:{f:300,n:"RedCat 61"}, a91f:{f:609,n:"Askar 91F"}, p200:{f:950,n:"200PDS"}};
+const CAMS={a585:{w:11.136,h:6.264,px:2.9,n:"ASI585"},
+            a2600:{w:23.5,h:15.7,px:3.76,n:"ASI2600"},
+            a1600:{w:17.7,h:13.4,px:3.8,n:"ASI1600MM"}};
+
+let aladin=null, fovLayer=null, booted=false;
+const state={ti:1, pa:0, w:1.42, h:0.95};
+
+function fovDeg(f,s){return 2*Math.atan((s/2)/f)*R2D;}
+function scopeF(){ return $("scope").value==="man" ? +$("mFoc").value : SCOPES[$("scope").value].f; }
+function scopeName(){ return $("scope").value==="man" ? "manual "+(+$("mFoc").value)+"mm" : SCOPES[$("scope").value].n; }
+function camDims(){ if($("cam").value==="man") return {w:+$("mW").value,h:+$("mH").value,px:+$("mPx").value||0,n:"manual"};
+  return CAMS[$("cam").value]; }
+function corners(cRa,cDec,wDeg,hDeg,paDeg){
+  const a=wDeg/2,b=hDeg/2,pa=paDeg*D,cd=Math.cos(cDec*D)||1;
+  return [[-a,-b],[a,-b],[a,b],[-a,b]].map(([u,v])=>{
+    const east=u*Math.cos(pa)+v*Math.sin(pa), north=-u*Math.sin(pa)+v*Math.cos(pa);
+    return [cRa+east/cd, cDec+north];
+  });
+}
+function drawBox(){
+  if(!aladin)return;
+  const [nm,ra,dec]=TGT[state.ti];
+  if(fovLayer && typeof fovLayer.removeAll==="function"){ try{fovLayer.removeAll();}catch(e){} }
+  else { try{aladin.removeOverlayByName&&aladin.removeOverlayByName("fovbox");}catch(e){}
+         fovLayer=A.graphicOverlay({name:"fovbox",color:"#ffcf6b",lineWidth:2}); aladin.addOverlay(fovLayer); }
+  if(!fovLayer){ fovLayer=A.graphicOverlay({name:"fovbox",color:"#ffcf6b",lineWidth:2}); aladin.addOverlay(fovLayer); }
+  fovLayer.addFootprints([A.polygon(corners(ra,dec,state.w,state.h,state.pa))]);
+}
+function recompute(){
+  const f=scopeF(), c=camDims();
+  state.w=fovDeg(f,c.w); state.h=fovDeg(f,c.h);
+  const psc = c.px>0 ? (206.265*c.px/f) : 0;
+  const asW=(state.w*60).toFixed(state.w<0.5?1:0), asH=(state.h*60).toFixed(state.h<0.5?1:0);
+  $("ro").innerHTML=`<b>${scopeName()} + ${c.n}</b><br>
+    FOV <b>${state.w.toFixed(2)}° × ${state.h.toFixed(2)}°</b> <i>(${asW}′ × ${asH}′)</i><br>
+    ${psc?`scale <b>${psc.toFixed(2)}″/px</b><br>`:``}
+    <i>${TGT[state.ti][0]}</i> · PA <b>${state.pa}°</b>`;
+}
+function apply(recenter){
+  recompute();
+  if(recenter && aladin){ const [nm,ra,dec]=TGT[state.ti];
+    aladin.gotoRaDec(ra,dec); aladin.setFov(1.9*Math.max(state.w,state.h)); }
+  drawBox();
+}
+TGT.forEach((t,i)=>{const o=document.createElement("option");o.value=i;o.textContent=t[0];$("tgt").appendChild(o);});
+$("tgt").value=1;
+$("tgt").onchange=e=>{state.ti=+e.target.value;apply(true);};
+$("scope").onchange=e=>{$("scopeMan").classList.toggle("show",e.target.value==="man");apply(true);};
+$("cam").onchange=e=>{$("camMan").classList.toggle("show",e.target.value==="man");apply(true);};
+["mFoc","mW","mH","mPx"].forEach(id=>$(id).oninput=()=>apply(true));
+$("pa").oninput=e=>{state.pa=+e.target.value;$("paTxt").textContent=state.pa+"°";recompute();drawBox();};
+$("srv").onchange=e=>{ if(aladin) aladin.setImageSurvey(e.target.value); };
+
+function boot(){
+  if(booted)return; booted=true;
+  const [nm,ra,dec]=TGT[state.ti];
+  recompute();
+  aladin=A.aladin("#al",{survey:"P/DSS2/color",projection:"SIN",target:ra+" "+dec,
+    fov:1.9*Math.max(state.w,state.h),cooFrame:"icrs",showReticle:false,showZoomControl:true,
+    showFullscreenControl:false,showLayersControl:false,showGotoControl:false,showSimbadPointerControl:false});
+  drawBox();
+}
+recompute();
+if(window.A && A.init){ A.init.then(boot).catch(()=>{}); }
+setTimeout(()=>{ if(!aladin) $("toast").textContent="Aladin didn't load — expected in the artifact sandbox (blocks the CDS tile CDN). Open from GitHub Pages / local.", $("toast").style.display="block"; },6000);
+</script>
+</body>
+</html>

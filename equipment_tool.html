@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment manager — equipment.json</title>
+<style>
+  :root{--ink:#ff9a76;--ink-dim:#a8543c;--hot:#ffcf6b;--edge:#43170f;--panel:#0d0301;
+    --panel2:#120402;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #app{display:flex;flex-direction:column;height:100%}
+  header{display:flex;gap:12px;align-items:center;padding:9px 16px;border-bottom:1px solid var(--edge);background:var(--panel2)}
+  h1{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:600;margin:0}
+  h2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-dim);margin:0 0 8px}
+  .spacer{margin-left:auto}.ver{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
+  button,input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--edge);border-radius:2px}
+  button{padding:7px 11px;font-size:12px;cursor:pointer}button:hover{border-color:var(--ink-dim)}
+  button.pri{color:#000;background:var(--hot);border-color:var(--hot);font-weight:600}
+  input{padding:5px 7px;font-family:var(--mono);font-size:12px}
+  main{flex:1 1 auto;overflow:auto;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .card{background:var(--panel2);border:1px solid var(--edge);border-radius:4px;padding:14px}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin-bottom:10px}
+  th,td{border-bottom:1px solid #1c0805;padding:5px 6px;text-align:left}
+  th{color:var(--ink-dim);font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase}
+  td input{width:100%}
+  td.id{font-family:var(--mono);color:var(--ink-dim);font-size:11px;width:70px}
+  .addrow{display:flex;gap:6px;flex-wrap:wrap;align-items:end;margin-top:10px;padding-top:10px;border-top:1px solid var(--edge)}
+  .addrow .f{display:flex;flex-direction:column;gap:3px}
+  .addrow label{font-family:var(--mono);font-size:9px;text-transform:uppercase;color:var(--ink-dim)}
+  .addrow input{width:90px}.addrow input.wide{width:130px}
+  .muted{color:var(--ink-dim);font-family:var(--mono);font-size:11px}
+  .del{padding:3px 7px}
+  .note{grid-column:1/3;font-family:var(--mono);font-size:11px;color:var(--ink-dim);line-height:1.6}
+  .note code{color:var(--hot)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Equipment manager</h1>
+    <div class="spacer"></div>
+    <input type="file" id="file" accept=".json" style="display:none">
+    <button onclick="document.getElementById('file').click()">Import equipment.json…</button>
+    <button id="exportBtn" class="pri">Export equipment.json</button>
+    <span class="ver">v0.1</span>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Scopes</h2>
+      <table><thead><tr><th>id</th><th>Name</th><th>Focal (mm)</th><th></th></tr></thead><tbody id="scTb"></tbody></table>
+      <div class="addrow">
+        <div class="f"><label>id</label><input id="scId" placeholder="e.g. n160"></div>
+        <div class="f"><label>Name</label><input id="scName" class="wide" placeholder="Askar N160"></div>
+        <div class="f"><label>Focal mm</label><input id="scF" type="number" placeholder="616"></div>
+        <button id="scAdd">+ add scope</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Cameras</h2>
+      <table><thead><tr><th>id</th><th>Name</th><th>W mm</th><th>H mm</th><th>px µm</th><th></th></tr></thead><tbody id="cmTb"></tbody></table>
+      <div class="addrow">
+        <div class="f"><label>id</label><input id="cmId" placeholder="e.g. a2600mm"></div>
+        <div class="f"><label>Name</label><input id="cmName" class="wide" placeholder="ASI2600MM"></div>
+        <div class="f"><label>W mm</label><input id="cmW" type="number" step="0.001" placeholder="23.5"></div>
+        <div class="f"><label>H mm</label><input id="cmH" type="number" step="0.001" placeholder="15.7"></div>
+        <div class="f"><label>px µm</label><input id="cmPx" type="number" step="0.01" placeholder="3.76"></div>
+        <button id="cmAdd">+ add camera</button>
+      </div>
+    </div>
+    <div class="note">Edits save into <code>equipment.json</code>, which SkyPlan and the FOV tool read on load
+      (scopes give focal length; cameras give sensor size + pixel pitch for FOV and ″/px). Import an existing
+      file to edit it, then Export to download. Ids must be unique and have no spaces.</div>
+  </main>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let scopes={rc61:{f:300,n:"RedCat 61"},a91f:{f:609,n:"Askar 91F"},p200:{f:950,n:"200PDS"}};
+let cams={a585:{w:11.136,h:6.264,px:2.9,n:"ASI585"},a2600:{w:23.5,h:15.7,px:3.76,n:"ASI2600"},a1600:{w:17.7,h:13.4,px:3.8,n:"ASI1600MM"}};
+const clean=s=>(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"");
+
+function render(){
+  const st=$("scTb"); st.innerHTML="";
+  for(const [id,s] of Object.entries(scopes)){ const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="id">${id}</td>
+      <td><input value="${(s.n||"").replace(/"/g,'&quot;')}" data-id="${id}" data-k="n"></td>
+      <td><input type="number" value="${s.f}" data-id="${id}" data-k="f" style="width:90px"></td>
+      <td><button class="del" data-id="${id}">✕</button></td>`; st.appendChild(tr); }
+  st.querySelectorAll("input").forEach(el=>el.onchange=e=>{const{id,k}=e.target.dataset;
+    scopes[id][k]=k==="f"?+e.target.value:e.target.value;});
+  st.querySelectorAll(".del").forEach(el=>el.onclick=e=>{delete scopes[e.target.dataset.id];render();});
+
+  const ct=$("cmTb"); ct.innerHTML="";
+  for(const [id,c] of Object.entries(cams)){ const tr=document.createElement("tr");
+    tr.innerHTML=`<td class="id">${id}</td>
+      <td><input value="${(c.n||"").replace(/"/g,'&quot;')}" data-id="${id}" data-k="n"></td>
+      <td><input type="number" step="0.001" value="${c.w}" data-id="${id}" data-k="w" style="width:74px"></td>
+      <td><input type="number" step="0.001" value="${c.h}" data-id="${id}" data-k="h" style="width:74px"></td>
+      <td><input type="number" step="0.01" value="${c.px}" data-id="${id}" data-k="px" style="width:64px"></td>
+      <td><button class="del" data-id="${id}">✕</button></td>`; ct.appendChild(tr); }
+  ct.querySelectorAll("input").forEach(el=>el.onchange=e=>{const{id,k}=e.target.dataset;
+    cams[id][k]=k==="n"?e.target.value:+e.target.value;});
+  ct.querySelectorAll(".del").forEach(el=>el.onclick=e=>{delete cams[e.target.dataset.id];render();});
+}
+$("scAdd").onclick=()=>{ const id=clean($("scId").value), n=$("scName").value.trim(), f=+$("scF").value;
+  if(!id||!n||!f){alert("need id, name, focal");return;} if(scopes[id]&&!confirm("id exists — overwrite?"))return;
+  scopes[id]={f,n}; $("scId").value=$("scName").value=$("scF").value=""; render(); };
+$("cmAdd").onclick=()=>{ const id=clean($("cmId").value), n=$("cmName").value.trim(),
+  w=+$("cmW").value,h=+$("cmH").value,px=+$("cmPx").value;
+  if(!id||!n||!w||!h){alert("need id, name, W, H");return;} if(cams[id]&&!confirm("id exists — overwrite?"))return;
+  cams[id]={w,h,px:px||0,n}; ["cmId","cmName","cmW","cmH","cmPx"].forEach(x=>$(x).value=""); render(); };
+$("exportBtn").onclick=()=>{ const out={scopes,cameras:cams};
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="equipment.json";a.click(); };
+$("file").onchange=e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader();
+  rd.onload=()=>{ try{const j=JSON.parse(rd.result);
+    if(j.scopes)scopes=j.scopes; if(j.cameras)cams=j.cameras; render();}catch(err){alert("bad JSON");} };
+  rd.readAsText(f); e.target.value=""; };
+render();
+</script>
+</body>
+</html>

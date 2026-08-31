@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Targets manager — Telescopius → targets.json + workflow.json</title>
+<style>
+  :root{--ink:#ff9a76;--ink-dim:#a8543c;--hot:#ffcf6b;--edge:#43170f;--panel:#0d0301;
+    --panel2:#120402;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #app{display:flex;flex-direction:column;height:100%}
+  header{display:flex;gap:12px;align-items:center;padding:9px 16px;border-bottom:1px solid var(--edge);background:var(--panel2);flex-wrap:wrap}
+  h1{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:600;margin:0}
+  .spacer{margin-left:auto}.ver{font-family:var(--mono);font-size:10px;color:var(--ink-dim)}
+  button,select,input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--edge);border-radius:2px}
+  button{padding:7px 11px;font-size:12px;cursor:pointer}button:hover{border-color:var(--ink-dim)}
+  button.pri{color:#000;background:var(--hot);border-color:var(--hot);font-weight:600}
+  select,input{padding:5px 7px;font-family:var(--mono);font-size:12px}
+  .bar{display:flex;gap:10px;align-items:center;padding:9px 16px;border-bottom:1px solid var(--edge);flex-wrap:wrap}
+  .bar label{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim)}
+  .sep{width:1px;height:22px;background:var(--edge)}
+  #drop{flex:1 1 auto;min-height:0;overflow:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{border-bottom:1px solid #1c0805;padding:5px 8px;text-align:left;white-space:nowrap}
+  th{position:sticky;top:0;background:var(--panel2);color:var(--ink-dim);font-family:var(--mono);font-size:10px;
+    letter-spacing:.06em;text-transform:uppercase;z-index:2}
+  td select{min-width:64px}
+  tr.ex{opacity:.35}
+  .muted{color:var(--ink-dim);font-family:var(--mono);font-size:11px}
+  .empty{padding:60px;text-align:center;color:var(--ink-dim);line-height:1.7}
+  .empty b{color:var(--hot)}
+  .drophot{outline:2px dashed var(--hot);outline-offset:-8px}
+  code{font-family:var(--mono);color:var(--hot)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>Targets manager</h1>
+    <span class="muted" id="count">0 targets</span>
+    <div class="spacer"></div>
+    <input type="file" id="file" accept=".csv,.json" multiple style="display:none">
+    <input type="file" id="equipFile" accept=".json" style="display:none">
+    <button onclick="document.getElementById('file').click()">Import CSV / targets.json…</button>
+    <button onclick="document.getElementById('equipFile').click()">Load equipment.json…</button>
+    <button id="addBtn">+ Manual</button>
+    <button id="exportT" class="pri">Export targets.json</button>
+    <button id="exportW" class="pri">Export workflow.json</button>
+    <span class="ver">v0.2</span>
+  </header>
+  <div class="bar">
+    <label>List</label>
+    <select id="listFilter"><option value="">all lists</option></select>
+    <span class="sep"></span>
+    <button id="autoMap" title="Assign default rig + band from each row's list name">✦ auto-map defaults</button>
+    <span class="sep"></span>
+    <label>Bulk → filtered</label>
+    <select id="bulkBand"><option value="">band…</option><option>NB</option><option>BB</option></select>
+    <select id="bulkScope"></select>
+    <select id="bulkCam"></select>
+    <button id="bulkApply">apply</button>
+    <span class="sep"></span>
+    <button id="selAll">check all</button><button id="selNone">uncheck all</button>
+    <button id="delChecked">remove checked</button><button id="clearAll">clear</button>
+  </div>
+  <div id="drop">
+    <div class="empty" id="empty">
+      Drag <b>Telescopius CSV</b> files here (or use Import). Also accepts an existing <code>targets.json</code>.<br>
+      <b>targets.json</b> stays a clean catalogue; rig + band go to <b>workflow.json</b> (keyed by id).
+    </div>
+    <table id="tbl" style="display:none">
+      <thead><tr>
+        <th><input type="checkbox" id="hdrChk"></th>
+        <th>Name</th><th>Common</th><th>Type</th><th>List</th><th>RA (h)</th><th>Dec (°)</th>
+        <th>Mag</th><th>Size ′</th><th>Opp</th><th>Band</th><th>Rig</th><th></th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let rows=[];   // {inc,id,name,cn,type,con,ra,dec,mag,size,opp,list,band,rigScope,rigCam}
+let SCOPES={rc61:"RedCat 61",a91f:"Askar 91F",p200:"200PDS",mak127:"SVBony Mak127"};
+let CAMS={a585:"ASI585",a2600:"ASI2600",a1600:"ASI1600MM"};
+
+/* ---------- deterministic CSV parser (tolerant of Telescopius quirks) ---------- */
+function parseCSV(text){
+  const R=[]; let row=[],f="",i=0,q=false; const n=text.length;
+  while(i<n){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i+=2;continue;} q=false;i++;continue;} f+=c;i++;continue; }
+    if(c==='"'){ q=true;i++;continue; }
+    if(c===','){ row.push(f);f="";i++;continue; }
+    if(c==='\r'){ i++;continue; }
+    if(c==='\n'){ row.push(f);f="";R.push(row);row=[];i++;continue; }
+    f+=c;i++;
+  }
+  if(f.length||row.length){ row.push(f); R.push(row); }
+  return R;
+}
+const num=s=>{const m=(s||"").match(/-?[\d.]+/g); return m?m.map(Number):[];};
+function raToDeg(s){ const p=num(s); if(!p.length)return null; return ((p[0]||0)+(p[1]||0)/60+(p[2]||0)/3600)*15; }
+function decToDeg(s){ const t=(s||"").trim(); const sign=t.startsWith("-")?-1:1;
+  const p=num(t.replace("-","")); if(!p.length)return null; return sign*((p[0]||0)+(p[1]||0)/60+(p[2]||0)/3600); }
+function sizeToArcmin(s){ if(!s)return null; const v=parseFloat(s); if(isNaN(v))return null; return /[º°]/.test(s)? v*60 : v; }
+const slug=s=>(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"");
+function deriveList(fn){ let s=(fn||"").replace(/\.[^.]+$/,"");
+  s=s.replace(/^telescopius[_\s-]*list[_\s-]*/i,"").replace(/_+/g," ").replace(/\s+/g," ").trim();
+  return s||"(list)"; }
+const monthOf=s=>{ const m=(s||"").match(/[A-Za-z]+/); return m?m[0]:""; };
+
+/* ---------- default rig + band by list keyword ---------- */
+function defaultsFor(list){ const l=(list||"").toLowerCase();
+  if(/dust|refl/.test(l))               return {scope:"rc61",cam:"a2600",band:"BB"};
+  if(/small/.test(l)&&/galax/.test(l))  return {scope:"p200",cam:"a585", band:"BB"};
+  if(/small/.test(l))                   return {scope:"p200",cam:"a585", band:"NB"};
+  if(/medium/.test(l))                  return {scope:"a91f",cam:"a2600",band:"NB"};
+  if(/large/.test(l))                   return {scope:"rc61",cam:"a2600",band:"NB"};
+  return null;
+}
+
+/* ---------- import ---------- */
+function importCSV(text,list){
+  const R=parseCSV(text); if(!R.length)return;
+  const head=R[0].map(h=>h.trim().toLowerCase());
+  const col=name=>head.findIndex(h=>h.startsWith(name));
+  const ci={cat:col("catalogue"),fam:col("familiar"),type:col("type"),con:col("constellation"),
+    ra:head.findIndex(h=>h.includes("right ascension")&&h.includes("j2000")),
+    dec:head.findIndex(h=>h.includes("declination")&&h.includes("j2000")),
+    mag:col("magnitude"),size:col("size"),opp:col("next opposition")};
+  if(ci.ra<0)ci.ra=head.findIndex(h=>h.includes("right ascension"));
+  if(ci.dec<0)ci.dec=head.findIndex(h=>h.includes("declination"));
+  for(let r=1;r<R.length;r++){ const c=R[r]; if(!c||!c.length)continue;
+    const name=(c[ci.cat]||"").trim(); if(!name)continue;
+    const ra=raToDeg(c[ci.ra]), dec=decToDeg(c[ci.dec]); if(ra==null||dec==null)continue;
+    const id=slug(name);
+    const rec={inc:true,id,name,cn:(c[ci.fam]||"").trim(),type:(c[ci.type]||"").trim(),
+      con:(c[ci.con]||"").trim(),ra:+ra.toFixed(4),dec:+dec.toFixed(4),
+      mag:(c[ci.mag]||"").trim(),size:sizeToArcmin(c[ci.size]),opp:monthOf(c[ci.opp]),
+      list,band:"",rigScope:"",rigCam:""};
+    const ex=rows.findIndex(x=>x.id===id);
+    if(ex>=0)rows[ex]=Object.assign(rows[ex],{name:rec.name,cn:rec.cn||rows[ex].cn,type:rec.type,con:rec.con,ra:rec.ra,dec:rec.dec,mag:rec.mag,size:rec.size,opp:rec.opp||rows[ex].opp});
+    else rows.push(rec);
+  }
+}
+function importJSON(text,list){
+  let arr; try{arr=JSON.parse(text);}catch(e){return;} if(!Array.isArray(arr))return;
+  for(const t of arr){ const id=t.id||slug(t.name); if(!id)continue;
+    const rec={inc:true,id,name:t.name||id,cn:t.cn||"",type:t.type||"",con:t.constellation||"",
+      ra:t.ra,dec:t.dec,mag:t.mag||"",size:t.size_arcmin||null,opp:t.opposition||"",
+      list:t.list||list||"imported",band:"",rigScope:"",rigCam:""};
+    const ex=rows.findIndex(x=>x.id===id); if(ex>=0)rows[ex]=Object.assign(rows[ex],rec); else rows.push(rec); }
+}
+function handleFiles(files){
+  let done=0; const total=files.length;
+  for(const f of files){ const rd=new FileReader(); const list=deriveList(f.name);
+    rd.onload=()=>{ const txt=rd.result;
+      (/\.json$/i.test(f.name)||txt.trim().startsWith("[")) ? importJSON(txt,list) : importCSV(txt,list);
+      if(++done===total) render(); };
+    rd.readAsText(f); }
+}
+
+/* ---------- render ---------- */
+const curFilter=()=>{const s=$("listFilter");return s?s.value:"";};
+function refreshListFilter(){ const sel=$("listFilter"); const cur=sel.value;
+  const lists=[...new Set(rows.map(r=>r.list).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">all lists</option>'+lists.map(l=>`<option ${l===cur?"selected":""}>${l}</option>`).join(""); }
+function equipOptions(map,sel){ return '<option value="">—</option>'+Object.entries(map).map(([id,n])=>`<option value="${id}" ${id===sel?"selected":""}>${n}</option>`).join(""); }
+function rigLabel(r){ if(!r.rigScope||!r.rigCam)return ""; return (SCOPES[r.rigScope]||r.rigScope)+" + "+(CAMS[r.rigCam]||r.rigCam); }
+function render(){
+  refreshListFilter(); const f=curFilter();
+  $("bulkScope").innerHTML='<option value="">scope…</option>'+Object.entries(SCOPES).map(([id,n])=>`<option value="${id}">${n}</option>`).join("");
+  $("bulkCam").innerHTML='<option value="">camera…</option>'+Object.entries(CAMS).map(([id,n])=>`<option value="${id}">${n}</option>`).join("");
+  const vis=rows.map((r,i)=>[r,i]).filter(([r])=>!f||r.list===f);
+  $("count").textContent=`${rows.length} targets · ${rows.filter(r=>r.inc).length} included`+(f?` · ${vis.length} in “${f}”`:"");
+  const tb=$("tb"); tb.innerHTML="";
+  $("tbl").style.display=rows.length?"table":"none";
+  $("empty").style.display=rows.length?"none":"block";
+  for(const [r,i] of vis){
+    const tr=document.createElement("tr"); tr.className=r.inc?"":"ex";
+    tr.innerHTML=`<td><input type="checkbox" data-i="${i}" class="chk" ${r.inc?"checked":""}></td>
+      <td>${r.name}</td><td>${r.cn||""}</td><td class="muted">${r.type||""}</td><td class="muted">${r.list||""}</td>
+      <td class="muted">${(r.ra/15).toFixed(2)}</td><td class="muted">${r.dec.toFixed(2)}</td>
+      <td class="muted">${r.mag||""}</td><td class="muted">${r.size?Math.round(r.size):""}</td>
+      <td class="muted">${r.opp||""}</td>
+      <td><select class="bd" data-i="${i}"><option value="">—</option><option ${r.band==="NB"?"selected":""}>NB</option><option ${r.band==="BB"?"selected":""}>BB</option></select></td>
+      <td class="muted">${rigLabel(r)}</td>
+      <td><button data-i="${i}" class="del">✕</button></td>`;
+    tb.appendChild(tr);
+  }
+  tb.querySelectorAll(".chk").forEach(el=>el.onchange=e=>{rows[+e.target.dataset.i].inc=e.target.checked;render();});
+  tb.querySelectorAll(".bd").forEach(el=>el.onchange=e=>{rows[+e.target.dataset.i].band=e.target.value;});
+  tb.querySelectorAll(".del").forEach(el=>el.onclick=e=>{rows.splice(+e.target.dataset.i,1);render();});
+}
+
+/* ---------- export ---------- */
+function exportTargets(){   // pure catalogue — no rig/band/status
+  const out=rows.filter(r=>r.inc).map(r=>{ const o={id:r.id,name:r.name};
+    if(r.cn)o.cn=r.cn; o.ra=r.ra; o.dec=r.dec;
+    if(r.type)o.type=r.type; if(r.mag!=="")o.mag=isNaN(+r.mag)?r.mag:+r.mag;
+    if(r.size)o.size_arcmin=+(+r.size).toFixed(1); if(r.con)o.constellation=r.con;
+    if(r.opp)o.opposition=r.opp; if(r.list)o.list=r.list; return o; });
+  download("targets.json",JSON.stringify(out,null,2));
+}
+function exportWorkflow(){  // per id: rigPrimary + band (starter state SkyPlan can override)
+  const out={};
+  rows.filter(r=>r.inc).forEach(r=>{ const e={};
+    if(r.rigScope&&r.rigCam)e.rigPrimary={scope:r.rigScope,cam:r.rigCam};
+    if(r.band)e.band=r.band;
+    if(Object.keys(e).length)out[r.id]=e; });
+  download("workflow.json",JSON.stringify(out,null,2));
+}
+function download(name,text){ const b=new Blob([text],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click(); }
+
+/* ---------- controls ---------- */
+$("file").onchange=e=>{handleFiles(e.target.files);e.target.value="";};
+$("equipFile").onchange=e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader();
+  rd.onload=()=>{ try{ const j=JSON.parse(rd.result);
+    if(j.scopes)SCOPES=Object.fromEntries(Object.entries(j.scopes).map(([id,s])=>[id,s.n||id]));
+    if(j.cameras)CAMS=Object.fromEntries(Object.entries(j.cameras).map(([id,c])=>[id,c.n||id]));
+    render(); }catch(err){alert("bad equipment.json");} };
+  rd.readAsText(f); e.target.value=""; };
+$("addBtn").onclick=()=>{ const name=prompt("Catalogue name (e.g. NGC 6888)"); if(!name)return;
+  const raH=prompt("RA in hours (e.g. 20.20)"), dec=prompt("Dec in degrees (e.g. 38.35)");
+  const ra=parseFloat(raH)*15, d=parseFloat(dec);
+  if(isNaN(ra)||isNaN(d)){alert("bad RA/Dec");return;}
+  rows.push({inc:true,id:slug(name),name,cn:"",type:"",con:"",ra:+ra.toFixed(4),dec:+d.toFixed(4),mag:"",size:null,opp:"",list:"manual",band:"",rigScope:"",rigCam:""}); render(); };
+$("exportT").onclick=exportTargets;
+$("exportW").onclick=exportWorkflow;
+$("autoMap").onclick=()=>{ rows.forEach(r=>{ const d=defaultsFor(r.list); if(d){ r.rigScope=d.scope; r.rigCam=d.cam; if(!r.band)r.band=d.band; } }); render(); };
+$("hdrChk").onchange=e=>{const f=curFilter();rows.forEach(r=>{if(!f||r.list===f)r.inc=e.target.checked;});render();};
+$("selAll").onclick=()=>{const f=curFilter();rows.forEach(r=>{if(!f||r.list===f)r.inc=true;});render();};
+$("selNone").onclick=()=>{const f=curFilter();rows.forEach(r=>{if(!f||r.list===f)r.inc=false;});render();};
+$("delChecked").onclick=()=>{const f=curFilter();rows=rows.filter(r=>!(r.inc&&(!f||r.list===f)));render();};
+$("clearAll").onclick=()=>{ if(confirm("Clear all rows?")){rows=[];render();} };
+$("bulkApply").onclick=()=>{ const band=$("bulkBand").value, sc=$("bulkScope").value, cm=$("bulkCam").value, f=curFilter();
+  rows.forEach(r=>{ if(r.inc&&(!f||r.list===f)){ if(band)r.band=band; if(sc)r.rigScope=sc; if(cm)r.rigCam=cm; } }); render(); };
+$("listFilter").onchange=render;
+
+/* drag & drop */
+const drop=$("drop");
+["dragover","dragenter"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("drophot");}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drophot");}));
+drop.addEventListener("drop",e=>{ if(e.dataTransfer.files.length)handleFiles(e.dataTransfer.files); });
+render();
+</script>
+</body>
+</html>

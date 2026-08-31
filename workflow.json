@@ -1,0 +1,1204 @@
+{
+  "ic410": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "sh2261": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ngc2174": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "status": "todo"
+  },
+  "sh2302": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ngc2467": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "sh2290": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585",
+      "pa": 0
+    },
+    "band": "NB",
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "status": "todo"
+  },
+  "ngc2736": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "todo",
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    }
+  },
+  "10h58": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "cn": "Pillars Statue Wide Field",
+    "status": "complete"
+  },
+  "sh2313": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "cn": "Flaming Crown",
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585",
+      "pa": 0
+    },
+    "status": "todo"
+  },
+  "ngc5367": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "sandqvist17": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ic4628": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a1600",
+      "pa": 0
+    },
+    "band": "NB",
+    "status": "complete",
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ngc6334": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc6357": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc6559": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "complete",
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ic1284": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "active",
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "cn": "Twiddlebug Nebula"
+  },
+  "sh288": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ngc1909": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "BB",
+    "status": "active"
+  },
+  "snrg2634030": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ldn1688": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc346": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "m45": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "BB",
+    "status": "new",
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "sh2230": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "pgc17223": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "sh2264": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ldn1622": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "c49": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "sh2308": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ic2177": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ngc3324": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585",
+      "pa": 0
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ic2944": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "barnard228": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "sh227": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "status": "active",
+    "cn": "Bird of Zeta"
+  },
+  "ngc6188": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc6729": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "sh291": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "NB",
+    "cn": "\"the Other Veil\" SNR",
+    "status": "active"
+  },
+  "ngc6960": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "complete",
+    "rigBackup": {
+      "scope": "rc61",
+      "cam": "a1600"
+    }
+  },
+  "sh2103": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "complete",
+    "hidden": true
+  },
+  "ngc55": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "ngc300": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc253": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "complete",
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc247": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc1097": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc474": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc7320": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "cn": "Stephans Quintet",
+    "status": "new"
+  },
+  "ngc1316": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc1566": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc1365": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "complete",
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ngc1300": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "m74": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "m77": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc1532": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc772": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ngc4945": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "antennaegalaxies": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "ngc5128": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "complete",
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ngc3189": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc3628": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "m104": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "m83": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "m100": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "m64": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc4414": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc5921": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "cn": "Serpens Galaxy",
+    "status": "todo"
+  },
+  "ngc6744": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc6752": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "status": "new"
+  },
+  "ic2602": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "c99": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "ic4592": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ldn43": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc4372": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "barnard72": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "vdb129": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "rigBackup": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "status": "new"
+  },
+  "sh263": {
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "ngc1333": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "lbn777": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc1555": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "m78": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ngc2626": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "cn": "Vela Reflection",
+    "status": "todo"
+  },
+  "ced110": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ic2631": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "band": "BB",
+    "status": "complete"
+  },
+  "ic3104": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "ic4635": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "BB",
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a1600"
+    },
+    "status": "todo"
+  },
+  "sandqvist156": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "todo"
+  },
+  "sandqvist168": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "BB",
+    "status": "parked"
+  },
+  "ngc246": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc1360": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "active"
+  },
+  "ngc1514": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc1535": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc2018": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "m1": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ngc2359": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ic2220": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc3199": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "cn": "Banana",
+    "status": "todo"
+  },
+  "ngc3247": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "ngc3293": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc3572": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "parked"
+  },
+  "ngc3576": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc5189": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "active"
+  },
+  "ngc6164": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "complete"
+  },
+  "ngc6302": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "active"
+  },
+  "sh268": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "active",
+    "cn": "Flaming Skull Nebula"
+  },
+  "ngc6820": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "parked",
+    "hidden": true
+  },
+  "sh286": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "cn": "Pillars of Vulpecula",
+    "status": "parked"
+  },
+  "m27": {
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    },
+    "band": "NB",
+    "status": "active"
+  },
+  "sh2101": {
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "band": "NB",
+    "status": "todo"
+  },
+  "m8": {
+    "status": "active",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600",
+      "pa": 0
+    },
+    "rigBackup": {
+      "scope": "rc61",
+      "cam": "a1600"
+    }
+  },
+  "m16": {
+    "status": "active",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585",
+      "pa": 0
+    },
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a2600",
+      "pa": 0
+    }
+  },
+  "m17": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    },
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "m20": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    },
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a1600"
+    }
+  },
+  "m31": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a2600"
+    }
+  },
+  "m33": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "m42": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    }
+  },
+  "ic434": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    },
+    "rigBackup": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ic4604": {
+    "status": "done",
+    "band": "BB",
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    }
+  },
+  "ngc2070": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    },
+    "rigBackup": {
+      "scope": "rc61",
+      "cam": "a1600"
+    }
+  },
+  "ngc2264": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc2442": {
+    "status": "done",
+    "band": "BB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc292": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    },
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ngc3372": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a2600"
+    },
+    "rigBackup": {
+      "scope": "rc61",
+      "cam": "a1600"
+    }
+  },
+  "ngc4038": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc6604": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ngc6726": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc6888": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a1600"
+    }
+  },
+  "ngc6992": {
+    "status": "active",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600",
+      "pa": 0
+    }
+  },
+  "ngc7293": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a1600"
+    },
+    "rigBackup": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ngc7582": {
+    "status": "done",
+    "band": "BB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a2600"
+    }
+  },
+  "lbn28": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "a91f",
+      "cam": "a585"
+    }
+  },
+  "ldn1780": {
+    "status": "done",
+    "band": "BB",
+    "rigPrimary": {
+      "scope": "rc61",
+      "cam": "a1600"
+    }
+  },
+  "ngc1743": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc1769": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc1934": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc1955": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  },
+  "ngc2014": {
+    "status": "done",
+    "band": "NB",
+    "rigPrimary": {
+      "scope": "p200",
+      "cam": "a585"
+    }
+  }
+}
